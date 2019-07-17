@@ -1,0 +1,19 @@
+{
+  "name": "tech_assessment",
+  "version": "1.0.0",
+  "description": "NodeJS API technical assessment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MythicWrath/tech_assessment.git"
+  },
+  "author": "Choy Jin Xiang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MythicWrath/tech_assessment/issues"
+  },
+  "homepage": "https://github.com/MythicWrath/tech_assessment#readme"
+}
