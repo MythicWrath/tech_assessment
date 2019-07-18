@@ -21,36 +21,44 @@ var connection = mysql.createConnection({
   
 connection.connect();
 
+app.post('/api/register', regStudent);
+app.get('/api/commonstudents', getCommonStudents);
+app.post('/api/suspend', suspendStudents);
+app.post('/api/retrievefornotifications', retrNotifStudents);
+
+
 /**
  * Teacher registers student
  */
-app.post('/api/register', function(req, res){
+function regStudent(req, res){
+    var body = req.body;
+    
 
-});
+};
 
 
 /**
  * Retrieve list of students common to given list of teachers
  */
-app.get('/api/commonstudents', function(req, res){
+function getCommonStudents(req, res){
 
-});
+};
 
 
 /**
  * Suspend a student
  */
-app.post('/api/suspend', function(req, res){
+function suspendStudents(req, res){
 
-});
+};
 
 
 /**
  * As a teacher, retrieve list of students who can receive a given notification
  */
-app.post('/api/retrievefornotifications', function(req, res){
+function retrNotifStudents(req, res){
 
-});
+};
   
 // connection.query('SELECT 1 + 1 AS solution', function (err, rows, fields) {
 //     if (err) throw err
