@@ -3,7 +3,7 @@ var express = require('express');
 var mysql = require('mysql');
 var bodyParser = require('body-parser');
 
-var app = express();
+const app = express();
 
 var config = require('./src/config.js');
 
@@ -59,6 +59,10 @@ function suspendStudents(req, res){
 function retrNotifStudents(req, res){
 
 };
+
+
+// Export our app for testing purposes
+export default app;
   
 // connection.query('SELECT 1 + 1 AS solution', function (err, rows, fields) {
 //     if (err) throw err
