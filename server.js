@@ -21,18 +21,50 @@ var connection = mysql.createConnection({
   
 connection.connect();
 
-app.post('/api/register', regStudent);
-app.get('/api/commonstudents', getCommonStudents);
-app.post('/api/suspend', suspendStudents);
-app.post('/api/retrievefornotifications', retrNotifStudents);
+app.post('/api/register', checkEmailLength, regStudent);
+app.get('/api/commonstudents', checkEmailLength, getCommonStudents);
+app.post('/api/suspend', checkEmailLength, suspendStudents);
+app.post('/api/retrievefornotifications', checkEmailLength, retrNotifStudents);
 
+/**
+ *  MIDDLEWARES
+ */
+// Middleware to check length of teacher and student emails are within 40 characters
+var checkEmailLength = function(req, res, next){
+    let body =  req.body;
+    let emailTooLong = false;
+    
+    if ('teacher' in body && body.teacher.length > 40){
+        emailTooLong = true;
+    } else if ('student' in body && body.student.length > 40){
+        emailTooLong = true;
+    } else if ('students' in body){
+        for(var student in body.students){
+            if (student.length > 40){
+                emailTooLong = true;
+            }
+        }
+    }
 
+    if (emailTooLong){
+        console.log("Emails too long");
+		res.status(400).send({message: "Length of emails cannot be longer than 40 characters."});
+    } else {
+        next();
+    }
+
+}
+
+/**
+ * ENDPOINT FUNCTIONS
+ */
 /**
  * Teacher registers student
  */
 function regStudent(req, res){
     var body = req.body;
-    
+   
+    // Check that 
 
 };
 
