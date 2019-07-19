@@ -5,7 +5,8 @@ VALUES ('studentagnes@gmail.com'),
 ('studentmark@gmail.com'),
 ('studentjon@gmail.com'),
 ('studentsally@gmail.com'),
-('studentmary@gmail.com');
+('studentmary@gmail.com'),
+('studenthon@gmail.com');
 
 INSERT INTO mydb.teacher (emailTeacher)
 VALUES ('teacherken@gmail.com'),
