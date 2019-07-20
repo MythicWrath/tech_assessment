@@ -15,8 +15,30 @@ app.use(bodyParser.urlencoded());
 
 app.use('/api', routes);
 
+
 // Connect to db then start listening
 models.sequelize.sync().then(function() {
+    let bulkC = false;
+
+    if (bulkC){
+        models.Student.bulkCreate([
+            {email: 'studentagnes@gmail.com'},
+            {email: 'studentbob@gmail.com'},
+            {email: 'studentkelly@gmail.com'},
+            {email: 'studentmark@gmail.com'},
+            {email: 'studentjon@gmail.com'},
+            {email: 'studentsally@gmail.com'},
+            {email: 'studentmary@gmail.com'},
+            {email: 'studenthon@gmail.com'},
+        ]);
+
+        models.Teacher.bulkCreate([
+            {email: 'teacherken@gmail.com'},
+            {email: 'teacherjoe@gmail.com'},
+            {email: 'teacherlana@gmail.com'},
+        ]);
+    }
+
     var server = app.listen(8080, function() {
 		var host = server.address().address;
 		var port = server.address().port;

@@ -12,6 +12,7 @@ var sequelize = new Sequelize(config.db_name, config.db_user, config.db_pw, {
     host: 'localhost',
     port: 3306,
     dialect: 'mysql',
+    logging: false,
 });
 
 fs
