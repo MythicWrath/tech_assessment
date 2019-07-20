@@ -1,6 +1,6 @@
 
 var express = require('express');
-var mysql = require('mysql');
+var Sequelize = require('sequelize');
 var bodyParser = require('body-parser');
 
 const app = express();
