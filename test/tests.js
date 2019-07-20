@@ -21,9 +21,13 @@ describe('Register students', function(){
         chai.request(app)
             .post('/api/register')
             .send(body)
-            .end((err, res) => {
+            .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
+                // console.log(err);
+                // console.log('************************');
+                // console.log(res);
+                // console.log('************************');
                 res.should.have.status(204);
-                err.should.be.null;
+                should.not.exist(err);
                 done();
             });
     });
@@ -38,11 +42,15 @@ describe('Register students', function(){
         }
 
         chai.request(app)
-            .post('./api/register')
+            .post('/api/register')
             .send(body)
             .end((err, res) => {
-                res.should.be.null;
-                
+                console.log(err);
+                // console.log('************************');
+                // console.log(res);
+                // console.log('************************');
+                should.not.exist(res);
+                done();
             })
     })
 
@@ -52,10 +60,14 @@ describe('Register students', function(){
         }
 
         chai.request(app)
-            .post('./api/register')
+            .post('/api/register')
             .send(body)
             .end((err, res) => {
-                
+                // console.log(err);
+                // console.log('************************');
+                // console.log(res);
+                // console.log('************************');
+                done();
             })
     })
 })

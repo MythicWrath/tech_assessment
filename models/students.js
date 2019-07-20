@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  var Student = sequelize.define('student', {
+  var Student = sequelize.define('Student', {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Student.associate = function(models) {
-    models.Student.belongsToMany(models.Teacher, {
+    Student.belongsToMany(models.Teacher, {
       through: 'TeacherStudent',
       foreignKey: 'email',
     });
