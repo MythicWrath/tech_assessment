@@ -18,7 +18,7 @@ app.use('/api', routes);
 
 // Connect to db then start listening
 models.sequelize.sync().then(function() {
-    let bulkC = false;
+    let bulkC = true;
 
     if (bulkC){
         models.Student.bulkCreate([
@@ -36,7 +36,31 @@ models.sequelize.sync().then(function() {
             {email: 'teacherken@gmail.com'},
             {email: 'teacherjoe@gmail.com'},
             {email: 'teacherlana@gmail.com'},
-        ]);
+            {email: 'teachertom@gmail.com'},
+        ]).then(() => {
+            models.Teacher.findByPk('teacherjoe@gmail.com').then((teachJoe) =>{
+                teachJoe.addStudents([
+                    'studentkelly@gmail.com', 
+                    'studentmark@gmail.com',
+                    'studentjon@gmail.com',
+                ])
+            });
+
+            models.Teacher.findByPk('teacherlana@gmail.com').then((teachLana) =>{
+                teachLana.addStudents([
+                    'studentkelly@gmail.com', 
+                    'studentsally@gmail.com',
+                    'studentmary@gmail.com',
+                    'studenthon@gmail.com',
+                ])
+            });
+
+            models.Teacher.findByPk('teacherken@gmail.com').then((teachKen) =>{
+                teachKen.addStudents([
+                    'studentagnes@gmail.com', 
+                ])
+            });
+        });
     }
 
     var server = app.listen(8080, function() {
