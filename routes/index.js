@@ -38,7 +38,6 @@ async function regStudent(req, res){
     for(studEmail of body.students){
         let student = await models.Student.findOne({where: {email: studEmail}});
         if (!student){
-            console.log("no student for: " + studEmail);
             return res.status(400).send({message: "One of the student email does not exist."}); 
         }
         
