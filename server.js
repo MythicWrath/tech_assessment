@@ -8,7 +8,7 @@ var routes = require('./routes/index');
 
 const app = express();
 
-var config = require('./config/config.js');
+var config = require('config');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());

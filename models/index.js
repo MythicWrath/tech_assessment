@@ -1,12 +1,14 @@
 'use strict';
+process.env.NODE_ENV = 'test';
 
-var fs        = require('fs');
-var path      = require('path');
+var fs = require('fs');
+var path = require('path');
 var Sequelize = require('sequelize');
-var basename  = path.basename(__filename);
-var env       = process.env.NODE_ENV || 'development';
-var config    = require(__dirname + '/../config/config.js');
-var db        = {};
+var basename = path.basename(__filename);
+var env = process.env.NODE_ENV || 'dev';
+// var config = require(__dirname + '/../config/test.js');
+var config = require('config');
+var db = {};
 
 var sequelize = new Sequelize(config.db_name, config.db_user, config.db_pw, {
     host: 'localhost',
