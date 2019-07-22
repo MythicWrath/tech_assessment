@@ -2,6 +2,9 @@ var models  = require('../models');
 var express = require('express');
 var router  = express.Router();
 
+var Sequelize = require('sequelize');
+var Op = Sequelize.Op;
+
 router.post('/register', regStudent);
 router.get('/commonstudents', getCommonStudents);
 router.post('/suspend', suspendStudents);
@@ -92,9 +95,78 @@ async function regStudent(req, res){
 /**
 * Retrieve list of students common to given list of teachers
 */
-function getCommonStudents(req, res){
+async function getCommonStudents(req, res){
+    console.debug(req.query.teacher);
+
+    // Make sure query contains 'teacher' param
+    if ('teacher' in req.query === false)
+        return res.status(400).send({message: "'teacher' parameter not found in query parameters."});
+
+    //Make sure teacher param is in array form. Cast it in array form if not.
+    let params;
+
+    if (Array.isArray(req.query.teacher)){
+        params = req.query.teacher;
+    } else if (typeof req.query.teacher === 'string'){
+        params = [req.query.teacher];
+    } else {
+        return res.status(400).send({message: "Unrecognized parameter type: Expecting 'string' or 'array'."})
+    }
+
+    // Check if queried teachers exist
+    // If all queried teachers exist, returned results count should be exactly the same as number of queried teachers
+    let results = await models.Teacher.findAndCountAll({
+        where: {
+            email: {
+                [Op.in]: params,
+            }
+        }
+    });
+
+    if (results.count !== params.length)
+        return res.status(400).send({message: "One or more email addresses sent do not exist in records."});
+
+    // Get students for each teacher, and find their intersection
+    let studEmails = [];
+    let firstPass = true;
+    
+    for (teacher of results.rows) {
+        let students = await teacher.getStudents({
+            attributes: ['email'],
+            raw: true,
+        });
+
+        let tempArr = students.map(x => x.email);
+
+        if (firstPass){
+            studEmails = tempArr;
+            firstPass = false;
+        } else {
+            studEmails = studEmails.filter(x => tempArr.includes(x));
+        }
+    };
+    console.log(studEmails);
+    res.status(200).send({students: studEmails})
+
+    // // Get all students registered to queried teachers, then filter to check for common students
+    // let students = await models.TeacherStudent.findAll({
+    //     attributes: ['StudentEmail'],
+    //     where: {
+    //         TeacherEmail: {
+    //             [Op.in]: params,
+    //         }
+    //     },
+    //     raw: true,
+    // });
+ 
+    // // Count repeated occurrences of returned student emails.
+    // // If student is common to all teachers, the email should be repeated for as many times.
+    // var arrEmails = students.map(x => x.StudentEmail);
+    // console.log(arrEmails);
 
 };
+
+// function intersect()
 
 
 /**
