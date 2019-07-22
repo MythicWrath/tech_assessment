@@ -37,7 +37,6 @@ describe('Retrieve common students', function(){
             .get('/api/commonstudents')
             .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
                 res.should.have.status(400);
-                res.should.be.json;
                 res.body.message.should.equal("'teacher' parameter not found in query parameters.")
                 done();
             });
@@ -49,7 +48,6 @@ describe('Retrieve common students', function(){
             .get('/api/commonstudents?teacher=teacherabc%40gmail.com')
             .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
                 res.should.have.status(400);
-                res.should.be.json;
                 res.body.message.should.equal("One or more email addresses sent do not exist in records.")
                 done();
             });

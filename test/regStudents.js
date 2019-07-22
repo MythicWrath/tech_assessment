@@ -46,7 +46,7 @@ describe('Register students', function(){
             .end((err, res) => {
                 res.should.have.status(400);
                 res.should.be.json;
-                res.body.message.should.equal("'teacher' field is missing.")
+                res.body.message.should.equal("'teacher' field not found in request body.")
                 done();
             })
     })
@@ -62,7 +62,7 @@ describe('Register students', function(){
             .end((err, res) => {
                 res.should.have.status(400);
                 res.should.be.json;
-                res.body.message.should.equal("'students' field is missing.")
+                res.body.message.should.equal("'students' field not found in request body.")
                 done();
             })
     })
@@ -96,7 +96,7 @@ describe('Register students', function(){
             .end((err, res) => {
                 res.should.have.status(400);
                 res.should.be.json;
-                res.body.message.should.equal("Indicated teacher email does not exist.")
+                res.body.message.should.equal("Indicated teacher email not found.")
                 done();
             })
     })
@@ -117,7 +117,7 @@ describe('Register students', function(){
             .end((err, res) => {
                 res.should.have.status(400);
                 res.should.be.json;
-                res.body.message.should.equal("One of the student email does not exist.")
+                res.body.message.should.equal("One of the student email not found.")
                 done();
             })
     })
