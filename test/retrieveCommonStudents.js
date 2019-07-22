@@ -4,6 +4,8 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let app = require('../server');
 let should = chai.should();
+let db_init = require('../database_util/init');
+
 
 chai.use(chaiHttp);
 
@@ -27,6 +29,8 @@ chai.use(chaiHttp);
  * */ 
 
 describe('Retrieve common students', function(){
+    before(() => db_init.dropAndInit());
+    
     it('should return error if no "teacher" field in query parameters.', (done) => {
         
         chai.request(app)

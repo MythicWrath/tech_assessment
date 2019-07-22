@@ -4,10 +4,13 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let app = require('../server');
 let should = chai.should();
+let db_init = require('../database_util/init');
+// db_init.dropAndInit();
 
 chai.use(chaiHttp);
 
 describe('Register students', function(){
+    before(() => db_init.dropAndInit());
     it('should successfully register students for a teacher', (done) => {
         let body = {
             teacher: "teacherken@gmail.com",
