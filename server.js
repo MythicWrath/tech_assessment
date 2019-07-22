@@ -1,6 +1,5 @@
 
 var express = require('express');
-var Sequelize = require('sequelize');
 var bodyParser = require('body-parser');
 
 var models = require('./models');
@@ -18,7 +17,7 @@ app.use('/api', routes);
 
 // Connect to db then start listening
 models.sequelize.sync().then(function() {
-    let bulkC = true;
+    let bulkC = config.bulkCreate;
 
     if (bulkC){
         models.Student.bulkCreate([
