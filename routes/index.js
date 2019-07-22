@@ -18,16 +18,16 @@ async function regStudent(req, res){
 
     // Block to check that body is well-formed
     if ('teacher' in body === false){
-        return res.status(400).send({message: "'teacher' field is missing."});
+        return res.status(400).send({message: "'teacher' field not found in request body."});
     } else if ('students' in body === false){
-        return res.status(400).send({message: "'students' field is missing."});
+        return res.status(400).send({message: "'students' field not found in request body."});
     } else if (body.students.length === 0){
         return res.status(400).send({message: "'students' field should not be empty."}); 
     }
 
     let teacher = await models.Teacher.findOne({where: {email: body.teacher}});
     if (!teacher)
-        return res.status(400).send({message: "Indicated teacher email does not exist."});
+        return res.status(400).send({message: "Indicated teacher email not found."});
 
     // body.students.forEach(async (studEmail) => {
 
@@ -41,7 +41,7 @@ async function regStudent(req, res){
     for(studEmail of body.students){
         let student = await models.Student.findOne({where: {email: studEmail}});
         if (!student){
-            return res.status(400).send({message: "One of the student email does not exist."}); 
+            return res.status(400).send({message: "One of the student email not found."}); 
         }
         
         teacher.addStudent(student); 
@@ -96,8 +96,6 @@ async function regStudent(req, res){
 * Retrieve list of students common to given list of teachers
 */
 async function getCommonStudents(req, res){
-    console.debug(req.query.teacher);
-
     // Make sure query contains 'teacher' param
     if ('teacher' in req.query === false)
         return res.status(400).send({message: "'teacher' parameter not found in query parameters."});
@@ -147,32 +145,32 @@ async function getCommonStudents(req, res){
     };
     console.log(studEmails);
     res.status(200).send({students: studEmails})
-
-    // // Get all students registered to queried teachers, then filter to check for common students
-    // let students = await models.TeacherStudent.findAll({
-    //     attributes: ['StudentEmail'],
-    //     where: {
-    //         TeacherEmail: {
-    //             [Op.in]: params,
-    //         }
-    //     },
-    //     raw: true,
-    // });
- 
-    // // Count repeated occurrences of returned student emails.
-    // // If student is common to all teachers, the email should be repeated for as many times.
-    // var arrEmails = students.map(x => x.StudentEmail);
-    // console.log(arrEmails);
-
 };
-
-// function intersect()
 
 
 /**
 * Suspend a student
 */
-function suspendStudents(req, res){
+async function suspendStudents(req, res){
+    // Make sure request body is well formed
+    if ('student' in req.body === false)
+        return res.status(400).send({message: "'student' field not found in request body."});
+    else if(typeof req.body.student !== 'string')
+        return res.status(400).send({message: "Type of data in 'student' field must be a string."});
+
+    let studentEmail = req.body.student;
+    // Check student exists
+    let student = await models.Student.findByPk(studentEmail);
+    if (!student)
+        return res.status(400).send({message: "Indicated student email not found."}); 
+    
+    // Suspend the student
+    student.update({suspend: true}, {where: studentEmail}).then(() => {
+        res.status(204).end();
+    }).catch((e) => {
+        console.log(e);
+        res.status(500).send({message: "Something went wrong when suspending the student."});
+    })
 
 };
 
