@@ -134,6 +134,7 @@ async function getCommonStudents(req, res){
             raw: true,
         });
 
+        // Get array consisting of student emails
         let tempArr = students.map(x => x.email);
 
         if (firstPass){
@@ -178,8 +179,45 @@ async function suspendStudents(req, res){
 /**
 * As a teacher, retrieve list of students who can receive a given notification
 */
-function retrNotifStudents(req, res){
+async function retrNotifStudents(req, res){
+    // Make sure request body is well formed
+    if ('teacher' in req.body === false)
+        return res.status(400).send({message: "'teacher' field not found in request body."});
+    else if ('notification' in req.body === false)
+        return res.status(400).send({message: "'notification' field not found in request body."});
+    else if(typeof req.body.notification !== 'string')
+        return res.status(400).send({message: "Type of data in 'notification' field must be a string."});
 
+    // Get mentioned students and check if they exist
+    let notif = req.body.notification;
+    let mentioned = notif.split(' ')
+                        .filter((val) => val[0] === '@');
+
+    if (mentioned.length > 0){
+        mentioned = mentioned.map((val) => val.substr(1)); // Remove '@' character from start of string
+        for(m of mentioned){
+            let st = await models.Student.findByPk(m);
+            if (!st){
+                return res.status(400).send({message: "One or more of the mentioned student email(s) not found."});  
+            }
+        }
+    }
+
+    // Check if indicated teacher exists
+    let teacher = await models.Teacher.findByPk(req.body.teacher);
+    if (!teacher){
+        return res.status(400).send({message: "Indicated teacher email not found."});  
+    }
+    // Get students of indicated teacher
+    let students = await teacher.getStudents({
+        attributes: ['email'],
+        raw: true,
+    });
+
+    // Get array consisting of student emails
+    let stEmailArr = students.map(x => x.email);
+
+    res.status(200).send({recipients: stEmailArr.concat(mentioned)});
 };
 
 module.exports = router;
