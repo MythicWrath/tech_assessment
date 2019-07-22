@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 
 var models = require('./models');
 var routes = require('./routes/index');
+var db_init = require('./database_util/init');
 
 const app = express();
 
@@ -15,52 +16,12 @@ app.use(bodyParser.urlencoded());
 app.use('/api', routes);
 
 
+
 // Connect to db then start listening
 models.sequelize.sync().then(function() {
-    let bulkC = config.bulkCreate;
-
-    if (bulkC){
-        models.Student.bulkCreate([
-            {email: 'studentagnes@gmail.com'},
-            {email: 'studentbob@gmail.com'},
-            {email: 'studentkelly@gmail.com'},
-            {email: 'studentmark@gmail.com'},
-            {email: 'studentjon@gmail.com'},
-            {email: 'studentsally@gmail.com'},
-            {email: 'studentmary@gmail.com'},
-            {email: 'studenthon@gmail.com'},
-        ]);
-
-        models.Teacher.bulkCreate([
-            {email: 'teacherken@gmail.com'},
-            {email: 'teacherjoe@gmail.com'},
-            {email: 'teacherlana@gmail.com'},
-            {email: 'teachertom@gmail.com'},
-        ]).then(() => {
-            models.Teacher.findByPk('teacherjoe@gmail.com').then((teachJoe) =>{
-                teachJoe.addStudents([
-                    'studentkelly@gmail.com', 
-                    'studentmark@gmail.com',
-                    'studentjon@gmail.com',
-                ])
-            });
-
-            models.Teacher.findByPk('teacherlana@gmail.com').then((teachLana) =>{
-                teachLana.addStudents([
-                    'studentkelly@gmail.com', 
-                    'studentsally@gmail.com',
-                    'studentmary@gmail.com',
-                    'studenthon@gmail.com',
-                ])
-            });
-
-            models.Teacher.findByPk('teacherken@gmail.com').then((teachKen) =>{
-                teachKen.addStudents([
-                    'studentagnes@gmail.com', 
-                ])
-            });
-        });
-    }
+    console.log(db_init);
+    if (config.init_db)
+        db_init.init();
 
     var server = app.listen(8080, function() {
 		var host = server.address().address;
@@ -70,11 +31,6 @@ models.sequelize.sync().then(function() {
 		console.log("Dir is " + __dirname);
 	});
   });
-
-// app.post('/api/register', checkEmailLength, regStudent);
-// app.get('/api/commonstudents', checkEmailLength, getCommonStudents);
-// app.post('/api/suspend', checkEmailLength, suspendStudents);
-// app.post('/api/retrievefornotifications', checkEmailLength, retrNotifStudents);
 
 /**
  *  MIDDLEWARES
@@ -105,51 +61,7 @@ models.sequelize.sync().then(function() {
 
 // }
 
-/**
- * ENDPOINT FUNCTIONS
- */
-/**
- * Teacher registers student
- */
-function regStudent(req, res){
-    var body = req.body;
-   
-    // Check that 
-
-};
-
-
-/**
- * Retrieve list of students common to given list of teachers
- */
-function getCommonStudents(req, res){
-
-};
-
-
-/**
- * Suspend a student
- */
-function suspendStudents(req, res){
-
-};
-
-
-/**
- * As a teacher, retrieve list of students who can receive a given notification
- */
-function retrNotifStudents(req, res){
-
-};
-
 
 // Export our app for testing purposes
 module.exports = app;
   
-// connection.query('SELECT 1 + 1 AS solution', function (err, rows, fields) {
-//     if (err) throw err
-  
-//     console.log('The solution is: ', rows[0].solution)
-// })
-  
-// connection.end()
