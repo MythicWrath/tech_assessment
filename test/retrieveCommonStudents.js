@@ -30,8 +30,7 @@ describe('Retrieve common students', function(){
     it('should return error if no "teacher" field in query parameters.', (done) => {
         
         chai.request(app)
-            .get('/api/commonstudents?teacher=teacherjoe%40gmail.com&teacher=teacherken%40gmail.com')
-            .send(body)
+            .get('/api/commonstudents')
             .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
                 res.should.have.status(400);
                 res.should.be.json;
@@ -44,7 +43,6 @@ describe('Retrieve common students', function(){
         
         chai.request(app)
             .get('/api/commonstudents?teacher=teacherabc%40gmail.com')
-            .send(body)
             .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
                 res.should.have.status(400);
                 res.should.be.json;
@@ -56,8 +54,7 @@ describe('Retrieve common students', function(){
     it('should return error if nonexistent teacher email is sent (Wrong email mixed with correct emails).', (done) => {
         
         chai.request(app)
-            .get('/api/commonstudents?teacher=teacherken@gmail.com&teacherabc%40gmail.com&teacherlana@gmail.com')
-            .send(body)
+            .get('/api/commonstudents?teacher=teacherken@gmail.com&teacher=teacherabc%40gmail.com&teacher=teacherlana@gmail.com')
             .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
                 res.should.have.status(400);
                 res.should.be.json;
@@ -75,7 +72,6 @@ describe('Retrieve common students', function(){
         
         chai.request(app)
             .get('/api/commonstudents?teacher=teacherjoe%40gmail.com')
-            .send(body)
             .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
                 res.should.have.status(200);
                 should.exist(res.body.students);
@@ -89,16 +85,10 @@ describe('Retrieve common students', function(){
     it('should get all common students and only common students (2 teachers)', (done) => {
         var gdRes = [
             'studentkelly@gmail.com', 
-            'studentmark@gmail.com',
-            'studentjon@gmail.com',
-            'studentsally@gmail.com',
-            'studentmary@gmail.com',
-            'studenthon@gmail.com',
-        ].sort();
+        ];
         
         chai.request(app)
             .get('/api/commonstudents?teacher=teacherjoe%40gmail.com&teacher=teacherlana%40gmail.com')
-            .send(body)
             .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
                 res.should.have.status(200);
                 should.exist(res.body.students);
@@ -113,7 +103,6 @@ describe('Retrieve common students', function(){
         
         chai.request(app)
             .get('/api/commonstudents?teacher=teachertom%40gmail.com')
-            .send(body)
             .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
                 res.should.have.status(200);
                 should.exist(res.body.students);
@@ -126,7 +115,6 @@ describe('Retrieve common students', function(){
         
         chai.request(app)
             .get('/api/commonstudents?teacher=teacherjoe%40gmail.com&teacher=teacherken%40gmail.com')
-            .send(body)
             .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
                 res.should.have.status(200);
                 should.exist(res.body.students);
