@@ -4,13 +4,17 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let app = require('../server');
 let should = chai.should();
-let db_init = require('../database_util/init');
-// db_init.dropAndInit();
+let db_init = require('../controllers/database_util/init');
+
+var models  = require('../controllers/models');
+var Sequelize = require('sequelize');
+var Op = Sequelize.Op;
 
 chai.use(chaiHttp);
 
 describe('Register students', function(){
     before(() => db_init.dropAndInit());
+
     it('should successfully register students for a teacher', (done) => {
         let body = {
             teacher: "teacherken@gmail.com",
@@ -26,8 +30,15 @@ describe('Register students', function(){
             .send(body)
             .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
                 res.should.have.status(204);
-                should.not.exist(err);
-                done();
+
+                models.TeacherStudent.findAll({where:{
+                    TeacherEmail: "teacherken@gmail.com",
+                    StudentEmail:  ["studentjon@gmail.com", "studenthon@gmail.com"]
+                }, raw: true}).then((results) => {
+                    results.should.have.lengthOf(2);
+                    done();
+                })
+                
             });
     });
 

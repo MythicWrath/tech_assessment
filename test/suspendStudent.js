@@ -4,8 +4,9 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let app = require('../server');
 let should = chai.should();
-let db_init = require('../database_util/init');
+let db_init = require('../controllers/database_util/init');
 
+var models  = require('../controllers/models');
 
 chai.use(chaiHttp);
 
@@ -26,7 +27,7 @@ describe('Suspend student', function(){
             });
     }); 
 
-    it('should return error if no "student" field does not contain a string.', (done) => {
+    it('should return error if "student" field does not contain a string.', (done) => {
         
         chai.request(app)
             .post('/api/suspend')
@@ -64,13 +65,16 @@ describe('Suspend student', function(){
     }); 
     
     it('should successfully suspend a student.', (done) => {
-        
         chai.request(app)
             .post('/api/suspend')
             .send({student: "studentmary@gmail.com"})
             .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
                 res.should.have.status(204);
-                done();
+                models.Student.findByPk("studentmary@gmail.com").then((st) => {
+                    st.suspend.should.be.true;
+                    done();
+                });
+                
             });
     }); 
 
@@ -86,7 +90,10 @@ describe('Suspend student', function(){
                     .send({student: "studentbob@gmail.com"})
                     .end((err, res) => {    // err object refers to connection error, not API error like 404 etc
                         res.should.have.status(204);
-                        done();
+                        models.Student.findByPk("studentmary@gmail.com").then((st) => {
+                            st.suspend.should.be.true;
+                            done();
+                        });
                     });
             });
     });  

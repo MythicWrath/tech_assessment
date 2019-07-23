@@ -4,7 +4,7 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let app = require('../server');
 let should = chai.should();
-let db_init = require('../database_util/init');
+let db_init = require('../controllers/database_util/init');
 
 
 chai.use(chaiHttp);
