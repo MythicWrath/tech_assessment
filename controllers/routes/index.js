@@ -16,7 +16,7 @@ router.post('/retrievefornotifications', retrNotifStudents);
 async function regStudent(req, res){
     var body = req.body;   
 
-    // Block to check that body is well-formed
+    // Check  request body is well-formed
     if ('teacher' in body === false){
         return res.status(400).send({message: "'teacher' field not found in request body."});
     } else if ('students' in body === false){
@@ -25,70 +25,23 @@ async function regStudent(req, res){
         return res.status(400).send({message: "'students' field should not be empty."}); 
     }
 
+    // Check that indicated teacher email exists
     let teacher = await models.Teacher.findOne({where: {email: body.teacher}});
     if (!teacher)
         return res.status(400).send({message: "Indicated teacher email not found."});
 
-    // body.students.forEach(async (studEmail) => {
-
-    //     let student = await models.Student.findOne({where: {email: studEmail}});
-    //     if (!student)
-    //         res.status(400).send({message: "One of the student email does not exist."}); 
-        
-    //     teacher.addStudent(student);
-    // });
-
+    // Check that each indicated students exist, then register the student
     for(studEmail of body.students){
         let student = await models.Student.findOne({where: {email: studEmail}});
         if (!student){
             return res.status(400).send({message: "One of the student email not found."}); 
         }
         
-        teacher.addStudent(student); 
+        await teacher.addStudent(student); 
     }
     
     res.status(204).end(); 
 
-
-
-    // Check that indicated teacher exists
-    // models.Teacher.findOne({where: {email: body.teacher}}).then(teacher => {
-    //     if (!teacher)
-    //         res.status(400).send({message: "Indicated teacher email does not exist."});
-    // }).then(() => {
-    //     // Loop through all the students
-    //     req.body.students.forEach(async (studEmail) => {
-
-    //         let student = await models.Student.findOne({where: {email: studEmail}});
-    //         if (!student)
-    //             res.status(400).send({message: "One of the student email does not exist."}); 
-            
-    //         teacher.addStudent(student);
-
-            // Check that student exists
-            // models.Student.findOne({where: {email: studEmail}}).then(student => {
-            //     if (!student)
-            //         res.status(400).send({message: "One of the student email does not exist."}); 
-
-            //     teacher.addStudent(student);
-               
-                // Create a dictionary with which to create the registration relationship
-                // const ts = {
-                //     Teacher_email: teacher.email,
-                //     Student_email: student.email,
-                // }
-
-                // // Create and save a TeacherStudent relationship
-                // models.TeacherStudent.findOrCreate({where: ts}).then(([result, created]) => {
-                //     res.status(204).end();
-                // });
-            // })
-        // })
-        
-    // }).then(() => res.status(204).end());
-
-    // Check that 
-    // res.status(204).end();
 };
 
 
@@ -144,7 +97,6 @@ async function getCommonStudents(req, res){
             studEmails = studEmails.filter(x => tempArr.includes(x));
         }
     };
-    console.log(studEmails);
     res.status(200).send({students: studEmails})
 };
 

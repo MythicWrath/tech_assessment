@@ -1,11 +1,11 @@
 'use strict';
-process.env.NODE_ENV = 'test';
+// process.env.NODE_ENV = 'test';
 
 var fs = require('fs');
 var path = require('path');
 var Sequelize = require('sequelize');
 var basename = path.basename(__filename);
-var env = process.env.NODE_ENV || 'dev';
+var env = process.env.NODE_ENV || 'test';
 var config = require('config');
 var db = {};
 
