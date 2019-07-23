@@ -14,6 +14,10 @@ This project is tested on NodeJS version 10.0.0. Install the required packages f
 npm install
 ```
 
+### Configurations
+
+Configuration files are found under ./config. 
+
 ### Launching the server
 
 The server can be launched by running:
