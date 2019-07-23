@@ -4,8 +4,8 @@
   "description": "NodeJS API technical assessment",
   "main": "server.js",
   "scripts": {
-    "start": "SET NODE_ENV=dev && node server.js",
-    "test": "mocha"
+    "start": "SET NODE_ENV=dev&& node server.js",
+    "test": "mocha --timeout 5000"
   },
   "repository": {
     "type": "git",
